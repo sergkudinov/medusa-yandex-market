@@ -1,8 +1,11 @@
 {
   "name": "medusa-yandex-market",
   "version": "0.0.1",
-  "description": "A starter for Medusa plugins.",
-  "author": "Medusa (https://medusajs.com)",
+  "description": "Yandex.Market integration plugin for Medusa.",
+  "author": "Sergei Kudinov",
+  "contributors": [
+    "Dmitry Grebennikov <parsifal.cs@gmail.com>"
+  ],
   "license": "MIT",
   "files": [
     ".medusa/server"
@@ -20,7 +23,10 @@
     "plugin",
     "medusa-plugin-other",
     "medusa-plugin",
-    "medusa-v2"
+    "medusa-v2",
+    "yandex",
+    "yandex.market",
+    "marketplace"
   ],
   "scripts": {
     "build": "medusa plugin:build",
