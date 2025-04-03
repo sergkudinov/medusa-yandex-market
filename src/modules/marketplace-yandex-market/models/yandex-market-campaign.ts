@@ -2,14 +2,14 @@ import { model } from "@medusajs/framework/utils"
 import YandexMarketBusiness from "./yandex-market-business"
 
 const YandexMarketCampaign = model.define("yandex_market_campaign", {
+  domain: model.text(),
   id: model.number().primaryKey(),
-  name: model.text(),
+  client_id: model.number(),
   business: model.belongsTo(() => YandexMarketBusiness, {
     mappedBy: "campaigns",
   }),
-  auth_tokens: model.array().unique(),
-  placement_type: model.enum(["Express", "FBS", "FBY", "DBS"]),
-  url: model.text(),
+  placement_type: model.text(),
+  url: model.text().nullable(),
   platform: model.text().default("Medusa"),
 })
 
