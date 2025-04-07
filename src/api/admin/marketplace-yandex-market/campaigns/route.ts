@@ -7,7 +7,7 @@ import {
 } from "../../../../workflows/add-campaigns"
 
 type PostAdminAddCampaignsType = {
-  apiKey: string
+  api_key: string
 }
 
 export const POST = async (
@@ -16,7 +16,7 @@ export const POST = async (
 ) => {
   const { result } = await addCampaignsWorkflow(req.scope)
     .run({
-      input: {apiKey: "ACMA:ckw2aOp3IKkBd0xpG71IvGxyKNRjj0B6SS6cEeIb:7aa8345b"},
+      input: {api_key: "ACMA:ckw2aOp3IKkBd0xpG71IvGxyKNRjj0B6SS6cEeIb:7aa8345b"},
     })
 
   res.json({ brand: result })

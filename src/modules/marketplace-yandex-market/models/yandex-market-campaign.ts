@@ -3,9 +3,9 @@ import YandexMarketBusiness from "./yandex-market-business"
 
 const YandexMarketCampaign = model.define("yandex_market_campaign", {
   domain: model.text(),
-  id: model.number().primaryKey(),
+  id: model.text().primaryKey(),
   client_id: model.number(),
-  business: model.belongsTo(() => YandexMarketBusiness, {
+  yandex_market_business: model.belongsTo(() => YandexMarketBusiness, {
     mappedBy: "campaigns",
   }),
   placement_type: model.text(),

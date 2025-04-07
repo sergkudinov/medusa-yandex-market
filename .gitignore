@@ -23,6 +23,10 @@ build
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.yalc
+yalc.lock
+yarn.lock
+package-lock.json
 
 .medusa
 /yandex-market-client

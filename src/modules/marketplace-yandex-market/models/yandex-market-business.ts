@@ -2,9 +2,9 @@ import { model } from "@medusajs/framework/utils"
 import YandexMarketCampaign from "./yandex-market-campaign"
 
 const YandexMarketBusiness = model.define("yandex_market_business", {
-  id: model.number().primaryKey(),
+  id: model.text().primaryKey(),
   name: model.text(),
-  auth_tokens: model.array().unique(),
+  api_key: model.text(),
   campaigns: model.hasMany(() => YandexMarketCampaign),
 })
 .cascades({
