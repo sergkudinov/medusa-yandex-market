@@ -86,7 +86,7 @@ export const UploadYmlStepInput = createStep(
       content: ymlString,
     }]);
 
-    return new StepResponse(fileDTO.url);
+    return new StepResponse({ymlUrl: fileDTO.url, ymlString});
   },
 );
 
@@ -97,7 +97,7 @@ export type UploadYmlWorkflowInput = {
 export const uploadYmlWorkflow = createWorkflow(
   'upload-yml-workflow',
   (input: UploadYmlWorkflowInput) => {
-    const ymlUrl = UploadYmlStepInput(input);
-    return new WorkflowResponse(ymlUrl);
+    const yml = UploadYmlStepInput(input);
+    return new WorkflowResponse(yml);
   }
 );

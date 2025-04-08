@@ -16,7 +16,7 @@ export const POST = async (
 ) => {
   const { result } = await uploadYmlWorkflow(req.scope)
     .run({
-      input: {fileName: "test.yml"},
+      input: {fileName: "test.xml"},
     })
 
   res.json({ ymlUrl: result })
