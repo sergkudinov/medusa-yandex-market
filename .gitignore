@@ -29,5 +29,4 @@ yarn.lock
 package-lock.json
 
 .medusa
-/yandex-market-client
 /yandex-market-partner-api
