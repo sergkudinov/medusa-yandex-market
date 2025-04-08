@@ -2,14 +2,15 @@ import { MedusaContainer } from "@medusajs/framework/types"
 import { uploadYmlWorkflow } from "../workflows/upload-yml"
 
 export default async function myPeriodicJob(container: MedusaContainer) {
-  const logger = container.resolve("logger")
+  const logger = container.resolve("logger");
   const { result } = await uploadYmlWorkflow(container).run({
     input: {fileName: "test.yml"},
-  })
+  });
+  logger.info(`File name: ${result.ymlId}`);
   logger.info(
     `Updated yml-file for yandex-market catalog: ${result.ymlUrl}`)
   logger.info(
-    `${result.ymlString}`) 
+    `${result.ymlString}`);
 }
 
 export const config = {

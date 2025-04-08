@@ -79,14 +79,13 @@ export const UploadYmlStepInput = createStep(
     const fileModuleService = container.resolve(
       Modules.FILE
     )
-    console.log(ymlString);
     const [fileDTO] = await fileModuleService.createFiles([{
       filename: input.fileName || `yandex-market-${Date.now()}.yml`,
       mimeType: 'application/x-yaml',
       content: ymlString,
     }]);
 
-    return new StepResponse({ymlUrl: fileDTO.url, ymlString});
+    return new StepResponse({ymlUrl: fileDTO.url, ymlId: fileDTO.id, ymlString});
   },
 );
 
