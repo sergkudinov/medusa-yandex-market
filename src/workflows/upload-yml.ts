@@ -5,7 +5,6 @@ import {
   createWorkflow,
   WorkflowResponse,
 } from '@medusajs/framework/workflows-sdk';
-import yml from "yandex-market-language";
 
 
 export type UploadYmlStepInput = {
@@ -15,76 +14,22 @@ export type UploadYmlStepInput = {
 export const UploadYmlStepInput = createStep(
   'upload-yml-step',
   async (input: UploadYmlStepInput, { container }) => {
-    const testYmlObject = {
-      name: "BestSeller",
-      company: "Tne Best inc.",
-      url: "http://best.seller.ru",
-      platform: "uCoz",
-      version: "1.0",
-      agency: "Технологичные решения",
-      email: "example-email@gmail.com",
-      categories: [
-        { id: "1", name: "Бытовая техника" },
-        { id: "10", parentId: "1", name: "Мелкая техника для кухни" },
-        { id: "101", parentId: "10", name: "Сэндвичницы и приборы для выпечки" },
-      ],
-      offers: [
-        {
-          id: "901299",
-          name: "Мороженица Brand 3811",
-          vendor: "Brand",
-          vendorCode: "A1234567B",
-          categoryId: "10",
-          picture: ["http://best.seller.ru/img/model_12345.jpg"],
-          description:
-            "<h3>Мороженица Brand 3811</h3> <p>Это прибор, который придётся по вкусу всем любителям десертов и сладостей, ведь с его помощью вы сможете делать вкусное домашнее мороженое из натуральных ингредиентов.</p>",
-          manufacturer_warranty: true,
-          country_of_origin: "Китай",
-          barcode: ["4601546021298"],
-          param: [
-            { name: "Цвет", value: "белый" },
-          ],
-          weight: 3.6,
-          dimensions: [20.1, 20.5, 22.5],
-          "service-life-days": "P2Y",
-          "comment-life-days": "Использовать при температуре не ниже -10 градусов.",
-          "warranty-days": "P1Y",
-          "comment-warranty":
-            "Гарантия не распространяется на механические повреждения покрытия чаши.",
-        },
-        {
-          id: "123467",
-          name: "Сэндвичница Brand A1234567B",
-          vendor: "Brand",
-          vendorCode: "A1234567B",
-          categoryId: "101",
-          picture: ["http://best.seller.ru/img/device56789.jpg"],
-          param: [
-            { name: "Мощность", value: "750 Вт" },
-          ],
-          description:
-            "Сэндвичница 2 в 1: можно приготовить как сэндвичи, так и вафли.",
-          manufacturer_warranty: true,
-          country_of_origin: "Россия",
-          barcode: ["9876543210"],
-          weight: 1.03,
-          dimensions: [20.8, 23.5, 9.0],
-        },
-      ],
-    };
-    const YML = yml(testYmlObject, { validate: false });
-    const ymlString = YML.end({ pretty: true });
+    const ymlString = `<?xml version="1.0" encoding="windows-1251"?><!DOCTYPE yml_catalog SYSTEM "shops.dtd"><yml_catalog date="2025-03-28 16:45"><shop><name>Привет</name><company>Интер-Флора</company><url>https://flora46.ru</url><platform>1C-Bitrix</platform><currencies><currency id="RUB" rate="1" /></currencies><categories><category id="52">Коробки</category><category id="53" parentId="52">Плайм-пакеты</category></categories><offers><offer id="899" available="true"><url>https://flora46.ru/catalog/box/baskets/santorini/?r1=yandext&amp;r2=</url><price>19600</price><currencyId>RUB</currencyId><categoryId>51</categoryId><picture>https://flora46.ru/upload/iblock/622/4wsv7o238askehhgaco063cqu8wufdpq.jpeg</picture><name>Санторини (Средний)</name><description></description><param name="Состав">Роза (Россия,60 см) 11 шт • Роза (Микс) 10 шт • Корзина средняя • Флористическая губка 3 шт • Упаковка 3 шт • Статица 2 шт • Фисташка 10 шт • Трахелиум 7 шт • Эвкалипт 3 шт</param></offer><offer id="857" available="true"><url>https://flora46.ru/catalog/box/playm/gerbery-i-alstromerii-v-playm-pakete/?r1=yandext&amp;r2=</url><price>2640</price><currencyId>RUB</currencyId><categoryId>53</categoryId><picture>https://flora46.ru/upload/iblock/3cc/tj1kdxh8iaz1qu7dsekzzku3riil8lpa.JPG</picture><name>Герберы и альстромерии в плайм-пакете (Маленький)</name><description></description><param name="Состав">Гербера 3 шт • Альстромерия • Хризантема кустовая • Плайм-пакет (средний) • Аспидистра 2 шт • Рускус (60 см) 3 шт</param></offer></offers></shop></yml_catalog>`;
+    // TODO change this to cache storage (redis or in-memory)
     const fileModuleService = container.resolve(
       Modules.FILE
     )
-    console.log(ymlString);
-    const [fileDTO] = await fileModuleService.createFiles([{
-      filename: input.fileName || `yandex-market-${Date.now()}.yml`,
-      mimeType: 'application/x-yaml',
+    const fileDTO = await fileModuleService.createFiles({
+      filename: input.fileName || `yandex-market.xml`,
+      mimeType: 'application/xml',
       content: ymlString,
-    }]);
+      access: 'public'
+    });
 
-    return new StepResponse({ymlUrl: fileDTO.url, ymlString});
+    return new StepResponse({
+      filePath: fileDTO.url, // TODO parse URL and get only path like "/static/filename.xml"
+      fileName: fileDTO.id,
+    });
   },
 );
 
@@ -95,6 +40,11 @@ export type UploadYmlWorkflowInput = {
 export const uploadYmlWorkflow = createWorkflow(
   'upload-yml-workflow',
   (input: UploadYmlWorkflowInput) => {
+    // TODO:
+    // `getExportsStep` - get all existing active exports
+    // `generateExportFilesStep` - generate YML files
+    // `updateExportsStep` - save `last_export_at`, `file_name`, `file_path`
+    // response with files array
     const yml = UploadYmlStepInput(input);
     return new WorkflowResponse(yml);
   }

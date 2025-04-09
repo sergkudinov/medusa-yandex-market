@@ -4,15 +4,12 @@ import { uploadYmlWorkflow } from "../workflows/upload-yml"
 export default async function myPeriodicJob(container: MedusaContainer) {
   const logger = container.resolve("logger")
   const { result } = await uploadYmlWorkflow(container).run({
-    input: {fileName: "test.yml"},
+    input: {fileName: "test.xml"},
   })
-  logger.info(
-    `Updated yml-file for yandex-market catalog: ${result.ymlUrl}`)
-  logger.info(
-    `${result.ymlString}`) 
+  // TODO display generated files count
+  logger.info(`Updated yml-file for yandex-market catalog: ${result.fileName}`)
 }
 
 export const config = {
   name: "update-yml-job",
-  schedule: "* * * * *", // обновление каждую минуту. Для обновления каджые 10 использовать - "*/10 * * * *"
-}
+  schedule: "*/10 * * * *", // TODO decide the schedule period
